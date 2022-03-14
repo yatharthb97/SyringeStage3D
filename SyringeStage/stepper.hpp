@@ -27,7 +27,7 @@ public:
     int pos = 0; //!< Position of the motor.
     
     /** @brief Empty Constructor. */
-    Stepper()
+    constexpr Stepper()
     {}
 
     /** @brief Initalization function for module. */
@@ -111,6 +111,16 @@ public:
         digitalWrite(dirPIN, HIGH);
         delay(2);
         this->move(n);
+    }
+
+
+    /** @brief Takes a position arguement and generates steps equal to the displacement
+     *  value. Sets the direction according to the sign of the displacement.*/
+    void go_to(int new_position)
+    {
+        int disp = new_position - this->pos;
+        set_dir(disp);
+        move(disp);
     }
 
 

@@ -71,10 +71,17 @@ public:
 			y = (y+1) * (y+1 < ylen) + 0 * !(y+1 < ylen);
 			x+=delx;
 
-			if(y == 0)
+			// Grid scanning has finished - repeat
+			if(y == 0 && ylen>0)
 			{
 				x = 0;
 				delx = +1;
+			}
+
+			// For 1D case, avoid taking two consequitive images.
+			if(y==0 && ylen==0)
+			{
+				x += delx;
 			}
 		}
 		

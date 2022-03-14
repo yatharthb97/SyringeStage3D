@@ -59,4 +59,13 @@ public:
 		
 	}
 
+	/** @brief Operator for direct access of motors. */
+	Stepper operator[](unsigned int axis_id)
+	{
+		if(axis_id < axis::z)
+		{
+			return stepper[axis_id];
+		}
+	}
+
 };

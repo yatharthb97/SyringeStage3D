@@ -1,10 +1,24 @@
 
 #include "sequence_file.hpp"
 
+//#include "StepperGroup3D.hpp"
+#include "adafruit_stepper.hpp"
+#include "syringe_motor.hpp"
+#include "pins.hpp"
+#include "grid.hpp"
+
+const int XSAMPLES = 5;
+const int YSAMPLES = 3;
+const int X_LENGTH = 1000;
+const int Y_LENGTH = 1000;
+const int Z_LENGTH = 1000;
+
 
 //StepperGroup variables
-StepperGroup3D stepper;
-Grid grid(XLEN, YLEN);
+//StepperGroup3D stepperg;
+AdafruitStepperGroup3D stepperg;
+AdafruitStepper stepper[3] = {AdafruitStepper(200, 1), AdafruitStepper(200, 2), AdafruitStepper(200, 2)};
+SpiralGrid grid(XSAMPLES, YSAMPLES);
 
 
 //SyrengeMotor variables
@@ -20,18 +34,25 @@ bool dispensation_over = false; //!< Flag to indicate if the dispensation sequen
 void setup()
 {
 	
-	//Stepper setups
-	SyringeMotor.init_motor(SYRINGE_EN, SYRINGE_DIR, SYRINGE_PULSE);
+	Serial.begin(9600);
 
-	stepperg.add_motor(stepperg.x, X_EN_PIN, X_DIR_PIN, X_PULSE_PIN);
-	stepperg.add_motor(stepperg.y, Y_EN_PIN, Y_DIR_PIN, Y_PULSE_PIN);
-	stepperg.add_motor(stepperg.z, Z_EN_PIN, Z_DIR_PIN, Z_PULSE_PIN);
+	//Stepper setups
+	syringe.init_motor(SYRINGE_EN, SYRINGE_DIR, SYRINGE_PULSE);
+
+	//stepperg.add_motor(stepperg.x, X_EN_PIN, X_DIR_PIN, X_PULSE_PIN);
+	//stepperg.add_motor(stepperg.y, Y_EN_PIN, Y_DIR_PIN, Y_PULSE_PIN);
+	//stepperg.add_motor(stepperg.z, Z_EN_PIN, Z_DIR_PIN, Z_PULSE_PIN);
+	//stepperg.add_motor(stepperg.y, 2, 200, 0);
+	//stepperg.add_motor(stepperg.x, 1, 200, 0);
+
+	//stepperg.add_motor(stepperg.z, Z_EN_PIN, Z_DIR_PIN, Z_PULSE_PIN);
 
 }
 
 
 
-
+//AdafruitStepper stpr(200, 2);
+//AdafruitStepper stpr2(200, 1);
 void loop()
 {
 	//blink(LED_BUILTIN, next_dispence());
@@ -42,11 +63,23 @@ void loop()
 	//digitalWrite(LED_BUILTIN, LOW);
 	//delay(200);
 
+	//stepper[0].go_to(500);
+	//stepper[0].go_to(0);
+	//stepper[1].go_to(500);
+	//stepper[1].go_to(0);
+	//stepperg[1].forward(500);
+	//stepperg[1].reverse(500);
 
-	xy_procedure(); //
-	delay(500);
-	z_procedure();
-	delay(500);
+	//stpr.forward(500);
+	//stpr.reverse(500);
+	//stpr2.forward(500);
+	//stpr2.reverse(500);
+	
+	xy_procedure();
+	delay(2000);
+	//delay(500);
+	//z_procedure();
+	//delay(500);
 
 }
 
@@ -102,7 +135,6 @@ void z_procedure()
 	syringe.dispense_mL(dispence_next());
 	delay(500); //Water clearing delay might have to be higher
 
-
 	//Hoist the syrenge back
 	stepperg[stepperg.z].reverse(Z_LENGTH);
 }
@@ -117,9 +149,13 @@ void xy_procedure()
 	new_pos[0] *= X_LENGTH;
 	new_pos[1] *= Y_LENGTH;
 
-	stepperg[stepperg.x].goto(new_pos[0]);
+	Serial.print(int(new_pos[0]) - stepper[0].pos);
+	Serial.print('\t');
+	Serial.println(int(new_pos[1]) - stepper[1].pos);
+
+	stepper[0].go_to(new_pos[0]);
 	delay(500);
-	stepperg[stepperg.y].goto(new_pos[1]);
+	stepper[1].go_to(new_pos[1]);
 
 }
 

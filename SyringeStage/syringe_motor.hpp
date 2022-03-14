@@ -7,6 +7,7 @@
  *It inherits the `Stepper` class and contains all its functionality as well.*/
 class SyringeMotor : public Stepper
 {
+public:
 	double syrenge_vol_mL = 20;        	//!< Total Syrenge Volume in mL.
 	unsigned long tot_steps = 1000000; 	//!< Total steps needed to empty the syrenge.
 	double delta_vol = 0; 				//!< Volume dispensed per step.
@@ -16,8 +17,8 @@ class SyringeMotor : public Stepper
 	
 
 	/** @brief Constructor. */
-	constexpr SyrengeMotor(double syrenge_vol_mL, unsigned long tot_steps) :
-	syrenge_vol_mL(syrenge_vol_mL), 
+	constexpr SyringeMotor(double syrenge_vol_mL, unsigned long tot_steps) :
+	syrenge_vol_mL(syrenge_vol_mL),
 	tot_steps(tot_steps), 
 	delta_vol(syrenge_vol_mL/double(tot_steps)),
 	rem_vol(syrenge_vol_mL)
@@ -49,7 +50,7 @@ class SyringeMotor : public Stepper
 	liquid by moving in the forward direction.*/
 	inline bool dispense_mL(double amount)
 	{
-		this->set_dir(stepper.fwd);
+		this->set_dir(direction::fwd);
 		move_mL(amount);
 	}
 
@@ -59,20 +60,9 @@ class SyringeMotor : public Stepper
 	Resets the direction to forward after completion. */
 	inline bool reverse_mL(double amount)
 	{
-		this->set_dir(stepper.rev);
+		this->set_dir(direction::rev);
 		move_mL(amount);
-		this->set_dir(stepper.fwd);
+		this->set_dir(direction::fwd);
 	}
 
 };
-
-
-
-
-unsigned int current_sample = 0;
-unsigned int current_schedule = 0;
-
-void next_dispense()
-{
-	dispense_mL(get_dispense_value(current_schedule, current_sample));
-}

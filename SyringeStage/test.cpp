@@ -1,11 +1,11 @@
-
+/*
 #include "grid.hpp"
 #include<iostream>
 
 
 int main()
 {
-	RasterGrid rgrid(10, 5);
+	RasterGrid rgrid(10, 0);
 
 	for(unsigned int i = 0; i < 100; i++)
 	{
@@ -17,3 +17,4 @@ int main()
 }
 
 
+*/
