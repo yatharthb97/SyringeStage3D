@@ -17,7 +17,7 @@ const int Z_LENGTH = 1000;
 //StepperGroup variables
 //StepperGroup3D stepperg;
 AdafruitStepperGroup3D stepperg;
-AdafruitStepper stepper[3] = {AdafruitStepper(200, 1), AdafruitStepper(200, 2), AdafruitStepper(200, 2)};
+AdafruitStepper stepper[3] = {AdafruitStepper(200, 2), AdafruitStepper(200, 1), AdafruitStepper(200, 2)};
 SpiralGrid grid(XSAMPLES, YSAMPLES);
 
 
